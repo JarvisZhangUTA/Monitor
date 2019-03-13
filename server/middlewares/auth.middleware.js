@@ -21,7 +21,18 @@ const adminLimit = function (req, res, next) {
 }
 
 const userLimit = function (req, res, next) {
+  if (!req.headers['x-token']) {
+    return res.status(404).send('Unauthentication')
+  }
 
+  const token = req.headers['x-token']
+  const decoded = authService.verifyToken(token)
+
+  if (!decoded) {
+    return res.status(404).send('Unauthentication')
+  }
+
+  next()
 }
 
 module.exports = {

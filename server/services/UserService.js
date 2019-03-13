@@ -19,7 +19,7 @@ class UserService {
   }
 
   async getUserList (params) {
-    Object.assign(params, {
+    params = Object.assign({
       page: 1,
       per_page: 40,
       email: null,
@@ -28,28 +28,28 @@ class UserService {
       can_upgrade: null,
       sort_by: null,
       sort_order: 'asc'
-    })
+    }, params)
 
     const find = {}
     const sort = {}
 
-    if (params.email !== null) {
-      find['email'] = new RegExp(params.email, 'i')
+    if (params.email) {
+      find['email'] = { '$regex' : params.email, '$options' : 'i' }
     }
-    if (params.role !== null) {
+    if (params.role) {
       find['role'] = params.role
     }
-    if (params.can_upgrade !== null) {
+    if (params.can_upgrade) {
       find['permission.can_upgrade'] = params.can_upgrade
     }
-    if (params.can_send_request !== null) {
+    if (params.can_send_request) {
       find['permission.can_send_request'] = params.can_send_request
     }
-    if (params.sort_by !== null) {
+    if (params.sort_by) {
       sort[params.sort_by] = params.sort_order
     }
 
-    let data = await UserModel.find(find).sort(sort).limit(params.per_page).skip(params.per_page * (params.page - 1)).exec();
+    let data = await UserModel.find(find).sort(sort).limit(+params.per_page).skip(+params.per_page * (+params.page - 1)).exec();
     let total = await UserModel.find(find).countDocuments().exec();
 
     return {data, total}
@@ -90,6 +90,23 @@ class UserService {
     await user.save()
 
     return this.blurUser(user)
+  }
+
+  async updateUser (userInfo) {
+    let user = null
+    if (userInfo._id) {
+      user = await UserModel.findOne({_id: userInfo._id}).exec()
+      delete userInfo._id
+    }
+    if (userInfo.email) {
+      user = await UserModel.findOne({email: userInfo.email}).exec()
+      delete userInfo.email
+    }
+    if (!user) {
+      return null
+    }
+    await user.update(userInfo).exec()
+    return user
   }
 }
 

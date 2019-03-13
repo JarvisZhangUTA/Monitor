@@ -22,22 +22,26 @@ import Layout from '../views/layout/Layout'
 export const constantRouterMap = [
   {
     path: '/signin',
+    name: 'Signin',
     component: () => import('@/views/auth/signin'),
     hidden: true
   },
   {
     path: '/signup',
+    name: 'Signup',
     component: () => import('@/views/auth/signup'),
     hidden: true
   },
 
   {
     path: '/404',
+    name: '404',
     component: () => import('@/views/error/404'),
     hidden: true
   },
   {
     path: '/401',
+    name: '401',
     component: () => import('@/views/error/401'),
     hidden: true
   },
@@ -50,30 +54,9 @@ export const constantRouterMap = [
     hidden: true,
     children: [{
       path: 'dashboard',
+      name: 'Dashboard',
       component: () => import('@/views/dashboard/index')
     }]
-  },
-
-  {
-    path: '/admin',
-    component: Layout,
-    redirect: '/admin/users',
-    name: 'Admin',
-    meta: { title: 'Admin', icon: 'user', roles: 'admin' },
-    children: [
-      {
-        path: 'users',
-        name: 'Users',
-        component: () => import('@/views/admin/users'),
-        meta: { title: 'Users', icon: 'user' }
-      },
-      {
-        path: 'monitors',
-        name: 'Monitors',
-        component: () => import('@/views/admin/monitors'),
-        meta: { title: 'Monitors', icon: 'user' }
-      }
-    ]
   },
 
   {
@@ -169,6 +152,7 @@ export const constantRouterMap = [
   },
   {
     path: 'external-link',
+    name: 'External',
     component: Layout,
     children: [
       {
@@ -177,7 +161,41 @@ export const constantRouterMap = [
       }
     ]
   },
-  { path: '*', redirect: '/404', hidden: true }
+
+  {
+    path: '*',
+    redirect: '/'
+  }
+]
+
+export const asyncRouterMap = [
+  {
+    path: '/admin',
+    component: Layout,
+    redirect: '/admin/users',
+    name: 'Admin',
+    meta: { title: 'Admin', icon: 'dashboard', roles: 'admin' },
+    children: [
+      {
+        path: 'users',
+        name: 'Users',
+        component: () => import('@/views/admin/users'),
+        meta: { title: 'Users', icon: 'user' }
+      },
+      {
+        path: 'monitors',
+        name: 'Monitors',
+        component: () => import('@/views/admin/monitors'),
+        meta: { title: 'Monitors', icon: 'user' }
+      },
+      {
+        path: 'commands',
+        name: 'Commands',
+        component: () => import('@/views/admin/commands'),
+        meta: { title: 'Commands', icon: 'user' }
+      }
+    ]
+  }
 ]
 
 export default new Router({

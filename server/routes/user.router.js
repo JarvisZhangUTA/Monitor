@@ -18,6 +18,32 @@ router.get('/', adminLimit, async function (req, res) {
   res.json(users)
 })
 
+router.put('/:_id', jsonParser, function (req, res, next) {
+  if (!req.headers['x-token']) {
+    return res.status(404).send('Token required')
+  }
+
+  const token = req.headers['x-token']
+  const verify = authService.verifyToken(token)
+
+  if (!verify) {
+    return res.status(404).send('Verify fail')
+  }
+
+  if (verify.role !== 'admin' && verify._id !== req.params._id) {
+    return res.status(404),send('You dont have authorization to change this')
+  }
+
+  if (req.body._id && req.body._id !== req.params._id) {
+    return res.status(404).send('Data and id not match')
+  }
+
+  next()
+}, async function (req, res) {
+  let user = await userService.updateUser(req.body)
+  res.json(user)
+})
+
 /** SIGN UP */
 router.post('/signup', jsonParser, function (req, res, next) {
   let params = req.body;

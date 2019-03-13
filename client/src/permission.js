@@ -42,7 +42,11 @@ router.beforeEach((to, from, next) => {
     // not signed
     if (!store.getters.role) {
       return store.dispatch('GetInfo').then(res => { // 拉取用户信息
-        next()
+        const role = res.data.role
+        store.dispatch('GenerateRoutes', { role }).then(() => { // 根据roles权限生成可访问的路由表
+          router.addRoutes(store.state.permission.addRouters) // 动态添加可访问路由表
+          next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+        })
       }).catch((err) => {
         store.dispatch('SignOut').then(() => {
           Message.error(err || 'Verification failed, please signin again')

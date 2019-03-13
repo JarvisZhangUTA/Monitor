@@ -7,3 +7,11 @@ export function getUserList(params) {
     params: params
   })
 }
+
+export function updateUser(id, params) {
+  return request({
+    url: '/users/' + id,
+    method: 'put',
+    data: params
+  })
+}

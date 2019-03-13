@@ -4,11 +4,15 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     token: getToken(),
+    _id: '',
     email: '',
     role: ''
   },
 
   mutations: {
+    SET_ID: (state, ID) => {
+      state._id = ID
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
@@ -60,6 +64,7 @@ const user = {
             reject('getInfo: role required')
           }
           commit('SET_EMAIL', data.email)
+          commit('SET_ID', data._id)
           resolve(response)
         }).catch(error => {
           reject(error)
