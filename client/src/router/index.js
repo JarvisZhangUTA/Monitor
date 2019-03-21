@@ -60,6 +60,50 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/monitor',
+    component: Layout,
+    redirect: '/monitor/list',
+    name: 'Monitors',
+    meta: { title: 'Monitor', icon: 'cpu' },
+    children: [
+      {
+        path: 'list',
+        name: 'MonitorList',
+        component: () => import('@/views/monitor/list'),
+        meta: { title: 'List', icon: 'nested' }
+      },
+      {
+        path: 'history',
+        name: 'MonitorHistory',
+        component: () => import('@/views/monitor/history'),
+        meta: { title: 'History', icon: 'table' }
+      },
+      {
+        path: 'manage',
+        name: 'MonitorManage',
+        hidden: true,
+        component: () => import('@/views/monitor/manage'),
+        meta: { title: 'Manage', icon: 'connector' }
+      }
+    ]
+  },
+  {
+    path: '/command',
+    component: Layout,
+    redirect: '/command/list',
+    name: 'Commands',
+    meta: { title: 'Commands', icon: 'binary' },
+    children: [
+      {
+        path: 'list',
+        name: 'CommandList',
+        component: () => import('@/views/command/list'),
+        meta: { title: 'Commands', icon: 'binary' }
+      }
+    ]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
@@ -174,7 +218,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/admin/users',
     name: 'Admin',
-    meta: { title: 'Admin', icon: 'dashboard', roles: 'admin' },
+    meta: { title: 'Admin', icon: 'database', roles: 'admin' },
     children: [
       {
         path: 'users',
@@ -186,13 +230,13 @@ export const asyncRouterMap = [
         path: 'monitors',
         name: 'Monitors',
         component: () => import('@/views/admin/monitors'),
-        meta: { title: 'Monitors', icon: 'user' }
+        meta: { title: 'Monitors', icon: 'cpu' }
       },
       {
         path: 'commands',
         name: 'Commands',
         component: () => import('@/views/admin/commands'),
-        meta: { title: 'Commands', icon: 'user' }
+        meta: { title: 'Commands', icon: 'binary' }
       }
     ]
   }

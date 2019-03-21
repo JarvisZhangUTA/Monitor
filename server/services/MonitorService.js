@@ -9,6 +9,10 @@ class MonitorService {
     return await MonitorModel.findOne({mac: mac}).exec()
   }
 
+  async getMonitorByIdAndSecret(monitor_id, secret) {
+    return await MonitorModel.findOne({monitor_id: monitor_id, secret: secret}).exec()
+  }
+
   async createMonitor(monitorInfo) {
     let monitor = new MonitorModel(monitorInfo)
     await monitor.save()
@@ -38,9 +42,9 @@ class MonitorService {
 
     if (params.ids) {
       if (Array.isArray(params.ids)) {
-        find._id = { $in: params.ids }
+        find.monitor_id = { $in: params.ids }
       } else {
-        find._id = params.ids
+        find.monitor_id = params.ids
       }
     }
     if (params.sort_by) {
@@ -53,8 +57,8 @@ class MonitorService {
     return {data, total}
   }
 
-  async deleteMonitor(id) {
-    return MonitorModel.deleteOne({ monitor_id: id }).exec()
+  async deleteMonitor(monitor_id) {
+    return MonitorModel.deleteOne({ monitor_id: monitor_id }).exec()
   }
 }
 

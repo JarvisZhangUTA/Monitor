@@ -24,6 +24,20 @@ router.get('/all', adminLimit, async function (req, res) {
   res.json(monitors)
 })
 
+router.get('/', userLimit, async function (req, res) {
+  const decoded = authService.verifyToken(req.headers['x-token'])
+  const user = await userService.getUserById(decoded._id)
+  const monitorIds = user.monitors
+  if (!monitorIds || monitorIds.length === 0) {
+    return res.json([])
+  }
+
+  req.query.ids = req.query.ids ? req.query.ids.filter(v => monitorIds.includes(v)) : monitorIds
+
+  const monitors = await monitorService.getMonitorList(req.query)
+  res.json(monitors)
+})
+
 router.put('/:_id', jsonParser, async function (req, res, next) {
   if (!req.headers['x-token']) {
     return res.status(404).send('Token required')
@@ -61,6 +75,63 @@ router.put('/:_id', jsonParser, async function (req, res, next) {
   delete params.secret
 
   let monitor = await monitorService.updateMonitor(params)
+  res.json(monitor)
+})
+
+router.post('/unlink', jsonParser, userLimit, function (req, res, next) {
+  let params = req.body;
+
+  if (!params.monitor_id) {
+    return res.status(404).send('ID Required')
+  }
+
+  next()
+}, async function (req, res) {
+  const decoded = authService.verifyToken(req.headers['x-token'])
+  const user = await userService.getUserById(decoded._id)
+
+  if (!user.monitors) {
+    user.monitors = []
+  }
+
+  const index = user.monitors.indexOf(req.body.monitor_id)
+  if (index !== -1) {
+    user.monitors.splice(index, 1)
+    await userService.updateUser(user)
+  }
+
+  res.send('Monitor unlinked')
+})
+
+router.post('/link', jsonParser, userLimit, function (req, res, next) {
+  let params = req.body;
+
+  if (!params.monitor_id) {
+    return res.status(404).send('ID Required')
+  }
+
+  if (!params.secret) {
+    return res.status(404).send('Secret Required')
+  }
+  
+  next()
+}, async function (req, res) {
+  const monitor = await monitorService.getMonitorByIdAndSecret(req.body.monitor_id, req.body.secret)
+  
+  if (!monitor) {
+    return res.status(404).send('Monitor not found')
+  }
+
+  const decoded = authService.verifyToken(req.headers['x-token'])
+  const user = await userService.getUserById(decoded._id)
+  
+  if (!user.monitors) {
+    user.monitors = []
+  }
+
+  user.monitors.push(monitor.monitor_id)
+  await userService.updateUser(user)
+
   res.json(monitor)
 })
 

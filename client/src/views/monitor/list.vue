@@ -5,7 +5,7 @@
         <el-button
           size="mini"
           type="success"
-          @click="() => $refs.MonitorCreateDialog.show()">
+          @click="() => $refs.MonitorLinkDialog.show()">
           Add a Montior
         </el-button>
       </div>
@@ -115,16 +115,25 @@
           label="COMMANDS">
           <template slot-scope="scope">
             <i
-              class="el-icon-more"
+              class="el-icon-more pointer"
               @click="editMonitorCommands(scope.row)"/>
           </template>
         </el-table-column>
       </el-table-column>
+      <el-table-column
+        align="center"
+        width="60">
+        <template slot-scope="scope">
+          <i
+            class="el-icon-error color-red pointer"
+            @click="unlinkMonitor(scope.row)"/>
+        </template>
+      </el-table-column>
     </el-table>
 
-    <monitor-create-dialog
-      ref="MonitorCreateDialog"
-      @on-create="onMonitorCreate"/>
+    <monitor-link-dialog
+      ref="MonitorLinkDialog"
+      @on-link="onMonitorLink"/>
     <monitor-command-edit-dialog
       ref="MonitorCommandEditDialog"
       @on-confirm="updateMonitor"/>
@@ -133,14 +142,14 @@
 
 <script>
 
-import MonitorCreateDialog from '@/components/Monitor/MonitorCreateDialog'
+import MonitorLinkDialog from '@/components/Monitor/MonitorLinkDialog'
 import MonitorCommandEditDialog from '@/components/Monitor/MonitorCommandEditDialog'
 
-import { geAllMonitorList, updateMonitor } from '@/api/monitor'
+import { getMonitorList, updateMonitor, unlinkMonitor } from '@/api/monitor'
 
 export default {
   components: {
-    MonitorCreateDialog,
+    MonitorLinkDialog,
     MonitorCommandEditDialog
   },
   data() {
@@ -158,7 +167,7 @@ export default {
   methods: {
     getData() {
       this.loading = true
-      geAllMonitorList({
+      getMonitorList({
         page: this.page,
         per_page: this.per_page
       }).then(res => {
@@ -175,8 +184,17 @@ export default {
       this.per_page = per_page
       this.getData()
     },
-    onMonitorCreate(monitor) {
+    onMonitorLink(monitor) {
       this.monitors.unshift(monitor)
+    },
+    unlinkMonitor(monitor) {
+      const index = this.monitors.findIndex(item => item.monitor_id === monitor.monitor_id)
+      unlinkMonitor(monitor).then(res => {
+        this.monitors.splice(index, 1)
+        this.$message('Monitor Removed')
+      }).catch(err => {
+        console.log(err)
+      })
     },
     editMonitorCommands(monitor) {
       this.$refs.MonitorCommandEditDialog.show(monitor)

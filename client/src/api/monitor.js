@@ -8,6 +8,22 @@ export function geAllMonitorList(params) {
   })
 }
 
+export function linkMonitor(params) {
+  return request({
+    url: '/monitors/link',
+    method: 'post',
+    data: params
+  })
+}
+
+export function unlinkMonitor(params) {
+  return request({
+    url: '/monitors/unlink',
+    method: 'post',
+    data: params
+  })
+}
+
 export function createMonitor(params) {
   return request({
     url: '/monitors',
