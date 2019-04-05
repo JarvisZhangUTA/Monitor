@@ -220,7 +220,7 @@ export default {
       }
 
       updateMonitor(monitor.monitor_id, monitor).then(res => {
-        const index = this.monitors.find(item => item.monitor_id === res.data.id)
+        const index = this.monitors.findIndex(item => +item.monitor_id === +res.data.monitor_id)
         if (index === -1) {
           this.monitors.push(res.data)
         } else {

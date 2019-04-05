@@ -38,12 +38,12 @@ router.get('/', userLimit, async function (req, res) {
   res.json(monitors)
 })
 
-router.put('/:_id', jsonParser, async function (req, res, next) {
+router.put('/:monitor_id', jsonParser, async function (req, res, next) {
   if (!req.headers['x-token']) {
     return res.status(404).send('Token required')
   }
 
-  const id = req.params._id
+  const id = req.params.monitor_id
   const token = req.headers['x-token']
   const verify = authService.verifyToken(token)
   
@@ -69,7 +69,7 @@ router.put('/:_id', jsonParser, async function (req, res, next) {
 
   let params = req.body
 
-  params.monitor_id = req.params._id
+  params.monitor_id = req.params.monitor_id
 
   delete params.mac
   delete params.secret

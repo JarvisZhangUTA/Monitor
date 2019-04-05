@@ -157,6 +157,8 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$config)
+    console.log(this.$socket)
     this.getData()
   },
   methods: {

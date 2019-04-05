@@ -105,7 +105,28 @@ class UserService {
     if (!user) {
       return null
     }
-    await user.update(userInfo).exec()
+
+    if (userInfo.email) {
+      user.email = userInfo.email
+    }
+    if (userInfo.password) {
+      user.password = userInfo.password
+    }
+    if (userInfo.role) {
+      user.role = userInfo.role
+    }
+    if (userInfo.permission.can_send_request) {
+      user.permission.can_send_request = userInfo.permission.can_send_request
+    }
+    if (userInfo.permission.can_upgrade) {
+      user.permission.can_upgrade = userInfo.permission.can_upgrade
+    }
+    if (userInfo.monitors) {
+      user.monitors = userInfo.monitors
+    }
+
+    user.save()
+
     return user
   }
 }

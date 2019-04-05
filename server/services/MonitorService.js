@@ -24,7 +24,25 @@ class MonitorService {
     if (!monitor) {
       return null
     }
-    await monitor.update(monitorInfo).exec()
+
+    if (monitorInfo.config && monitorInfo.config.EN_485) {
+      monitor.config.EN_485 = monitorInfo.config.EN_485
+    }
+    if (monitorInfo.config && monitorInfo.config.BAUD_RATE) {
+      monitor.config.BAUD_RATE = monitorInfo.config.BAUD_RATE
+    }
+    if (monitorInfo.config && monitorInfo.config.SERIAL_CYC) {
+      monitor.config.SERIAL_CYC = monitorInfo.config.SERIAL_CYC
+    }
+    if (monitorInfo.config && monitorInfo.config.SERIAL_WAIT) {
+      monitor.config.SERIAL_WAIT = monitorInfo.config.SERIAL_WAIT
+    }
+    if (monitorInfo.config && monitorInfo.config.COMMANDS) {
+      monitor.config.COMMANDS = monitorInfo.config.COMMANDS
+    }
+
+    monitor.save()
+
     return monitor
   }
 
