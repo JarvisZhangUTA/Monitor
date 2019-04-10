@@ -6,6 +6,7 @@ const AuthService = require('../services/AuthService')
 const UserService = require('../services/UserService')
 const MonitorService = require('../services/MonitorService')
 const ResponseService = require('../services/ResponseService')
+const ResponseParser = require('../utils/ResponseParser')
 
 class WebsocketServer {
   constructor () {
@@ -53,7 +54,6 @@ class WebsocketServer {
   }
 
   onClose (ws) {
-
     let index = -1
 
     index = this.userConnections.indexOf(ws)
@@ -131,7 +131,7 @@ class WebsocketServer {
   onMonitorMessage (ws, message) {
     switch (message.type) {
       case 'response':
-        let response = message.response
+        let response = ResponseParser.parse(message.response)
         response.monitor_id = ws.monitor.monitor_id
         this.responseService.saveResponse(response)
         break;
@@ -140,9 +140,7 @@ class WebsocketServer {
 
   async onVerifyMessage (ws, message) {
     if ( message.type !== 'verify' ) {
-      this.sendMessage(ws, {
-        type: 'unverified'
-      })
+      this.sendMessage(ws, { type: 'unverified' })
       return
     }
 
@@ -156,34 +154,9 @@ class WebsocketServer {
       return
     }
 
-    if (client.user_id) {
-      let user = await this.userService.getUserById(client.user_id)
-      
-      if (!user) {
-        return
-      } else {
-        delete user.password
-      }
-
-      let index = this.userConnections.findIndex(item => {
-        return item.user && item.user._id === client.user_id
-      })
-
-      if (index > -1) {
-        this.userConnections[index].close()
-      }
-
-      ws.verify = 'user'
-      ws.user = user
-
-      this.userConnections.push(ws)
-
-      this.sendMessage(ws, { type: 'verify', user: user })
-    }
-
+    
     if (client.monitor_id) {
       let monitor = await this.monitorService.getMonitorById(client.monitor_id)
-
       if (!monitor) {
         return
       } else {
@@ -202,8 +175,31 @@ class WebsocketServer {
       ws.monitor = monitor
 
       this.monitorConnections.push(ws)
+      this.sendMessage(ws, { type: 'connected' })
+    } else if (client._id) {
+      let user = await this.userService.getUserById(client._id)
+      
+      if (!user) {
+        return
+      } else {
+        delete user.password
+      }
 
-      this.sendMessage(ws, { type: 'verify', monitor: monitor })
+      let index = this.userConnections.findIndex(item => {
+        return item.user && item.user._id === client._id
+      })
+
+      if (index > -1) {
+        this.userConnections[index].close()
+      }
+
+      ws.verify = 'user'
+      ws.user = user
+
+      this.userConnections.push(ws)
+      this.sendMessage(ws, { type: 'connected' })
+    } else {
+      this.sendMessage(ws, { type: 'unverified' })
     }
   }
 }

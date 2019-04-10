@@ -5,7 +5,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  name: 'App'
+  name: 'App',
+  computed: {
+    ...mapGetters([
+      'token'
+    ])
+  },
+  mounted() {
+    if (this.token) {
+      this.$socket.init(this.token)
+    }
+  }
 }
 </script>

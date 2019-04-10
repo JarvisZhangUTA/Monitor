@@ -178,4 +178,31 @@ router.delete('/:id', adminLimit, async function (req, res) {
   res.json(deleted)
 })
 
+/** SIGN IN */
+router.post('/signin', jsonParser, function (req, res, next) {
+  let params = req.body
+
+  if (!params.monitor_id) {
+    return res.status(404).send('Monitor_id required')
+  }
+
+  if (!params.mac) {
+    return res.status(404).send('Mac Required')
+  }
+
+  next()
+}, async function (req, res) {
+  let params = req.body
+  let monitor = await monitorService.getMonitorById(params['monitor_id'])
+
+  if (!monitor || monitor.mac != params['mac']) {
+    return res.status(404).send('Monitor not found')
+  }
+
+  monitor = monitor.toObject()
+  monitor.token = authService.signToken(monitor)
+
+  res.json(monitor)
+})
+
 module.exports = router

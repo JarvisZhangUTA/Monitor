@@ -75,8 +75,16 @@ export const constantRouterMap = [
       {
         path: 'history',
         name: 'MonitorHistory',
+        hidden: true,
         component: () => import('@/views/monitor/history'),
         meta: { title: 'History', icon: 'table' }
+      },
+      {
+        path: 'statistics',
+        name: 'MonitorStatistics',
+        hidden: true,
+        component: () => import('@/views/monitor/statistics'),
+        meta: { title: 'Statistics', icon: 'pie-chart' }
       },
       {
         path: 'manage',

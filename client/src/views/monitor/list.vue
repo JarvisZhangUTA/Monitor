@@ -39,8 +39,15 @@
 
       <!-- INDEX -->
       <el-table-column
-        :index="1"
-        type="index"/>
+        align="center"
+        type="index">
+        <template slot-scope="scope">
+          <svg-icon
+            :class="online_monitors.indexOf(scope.row.monitor_id) > -1 ? 'color-green' : ''"
+            icon-class="circle"
+            class="right-float"/>
+        </template>
+      </el-table-column>
       <!-- ID -->
       <el-table-column
         label="ID">
@@ -121,6 +128,14 @@
         </el-table-column>
       </el-table-column>
       <el-table-column
+        align="center">
+        <template slot-scope="scope">
+          <router-link :to="`/monitor/history?id=${scope.row.monitor_id}`">
+            History
+          </router-link>
+        </template>
+      </el-table-column>
+      <el-table-column
         align="center"
         width="60">
         <template slot-scope="scope">
@@ -155,6 +170,7 @@ export default {
   data() {
     return {
       loading: false,
+      online_monitors: [],
       monitors: [],
       page: 1,
       per_page: 40,
@@ -163,8 +179,20 @@ export default {
   },
   mounted() {
     this.getData()
+    this.$socket.subscribe(this)
+    this.$socket.sendMessage({ type: 'monitors' })
+  },
+  beforeDestory() {
+    this.$socket.unsubscibe(this)
   },
   methods: {
+    onMessage(message) {
+      switch (message.type) {
+        case 'monitors':
+          this.online_monitors = message.data
+          break
+      }
+    },
     getData() {
       this.loading = true
       getMonitorList({
@@ -174,6 +202,8 @@ export default {
         this.loading = false
         this.monitors = res.data.data
         this.total = res.data.total
+      }).catch(err => {
+        console.log(err)
       })
     },
     pageChange(page) {

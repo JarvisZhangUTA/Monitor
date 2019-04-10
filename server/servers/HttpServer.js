@@ -5,7 +5,6 @@ const http = require('http')
 const config = require('../config')
 
 const CommandRouter = require('../routes/command.router')
-const CommandHistoryRouter = require('../routes/command_history.router')
 const MonitorRouter = require('../routes/monitor.router')
 const ResponseRouter = require('../routes/response.router')
 const UserRouter = require('../routes/user.router')
@@ -15,7 +14,6 @@ class HttpServer {
     app.use(express.static(path.join(__dirname,'../../client/dist')))
 
     app.use('/api/commands', CommandRouter)
-    app.use('/api/command_histories', CommandHistoryRouter)
     app.use('/api/monitors', MonitorRouter)
     app.use('/api/responses', ResponseRouter)
     app.use('/api/users', UserRouter)
