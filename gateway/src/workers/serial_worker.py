@@ -10,9 +10,9 @@ from binascii import unhexlify
 from helpers.command_helper import CommandHelper
 from helpers.redis_queue import RedisQueue
 
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(4, GPIO.OUT)
 GPIO.output(4, GPIO.HIGH)
-GPIO.setmode(GPIO.BCM)
 
 class SerialWorker:
     def __init__(self, config):
@@ -43,7 +43,7 @@ class SerialWorker:
             time.sleep(self.config.SERIAL_CYC)
 
     def executeTask(self, command):
-        GPIO.output(self.config.EN_485,GPIO.HIGH)
+        GPIO.output(4,GPIO.HIGH)
         
         print 'write to 485 %s...' % command[0:10]
 
@@ -53,7 +53,7 @@ class SerialWorker:
         while self.port.out_waiting > 0:
             time.sleep(0.01)
 
-        GPIO.output(self.config.EN_485,GPIO.LOW)
+        GPIO.output(4,GPIO.LOW)
         result = self.port.readall()
 
         if result:
