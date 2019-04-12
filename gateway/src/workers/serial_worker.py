@@ -28,7 +28,7 @@ class SerialWorker:
         self.run()
     
     def run(self):
-        print 'Serial Worker Fake Run'
+        print 'Serial Worker Run'
         command_index = 0
         while True:
             command = self.command_queue.get_nowait()
