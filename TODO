@@ -1,0 +1,3 @@
+server/config.js
+gateway/src/config/config.py
+client/src/config.js
