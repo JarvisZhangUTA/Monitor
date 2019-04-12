@@ -67,10 +67,10 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <!-- MAC -->
+      <!-- Serial Number -->
       <el-table-column
-        prop="mac"
-        label="Mac"
+        prop="serial_num"
+        label="Serial Number"
         width="150"/>
       <!-- SECRET -->
       <el-table-column

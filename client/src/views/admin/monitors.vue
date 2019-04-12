@@ -50,10 +50,10 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <!-- MAC -->
+      <!-- Serial Number -->
       <el-table-column
-        prop="mac"
-        label="Mac"/>
+        prop="serial_num"
+        label="Serial Num"/>
       <!-- SECRET -->
       <el-table-column
         prop="secret"

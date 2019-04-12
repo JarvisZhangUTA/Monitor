@@ -71,7 +71,7 @@ router.put('/:monitor_id', jsonParser, async function (req, res, next) {
 
   params.monitor_id = req.params.monitor_id
 
-  delete params.mac
+  delete params.serial_num
   delete params.secret
 
   let monitor = await monitorService.updateMonitor(params)
@@ -142,8 +142,8 @@ router.post('/', jsonParser, adminLimit, function (req, res, next) {
     return res.status(404).send('ID Required')
   }
 
-  if (!params.mac) {
-    return res.status(404).send('MAC Required')
+  if (!params.serial_num) {
+    return res.status(404).send('Serial Num Required')
   }
   
   next()
@@ -158,9 +158,9 @@ router.post('/', jsonParser, adminLimit, function (req, res, next) {
     return res.status(404).send('ID exists')
   }
 
-  monitor = await monitorService.getMonitorByMac(params.mac)
+  monitor = await monitorService.getMonitorBySerialNum(params.serial_num)
   if (monitor) {
-    return res.status(404).send('MAC exists')
+    return res.status(404).send('Serial Num exists')
   }
 
   monitor = await monitorService.createMonitor(params)
@@ -186,8 +186,8 @@ router.post('/signin', jsonParser, function (req, res, next) {
     return res.status(404).send('Monitor_id required')
   }
 
-  if (!params.mac) {
-    return res.status(404).send('Mac Required')
+  if (!params.serial_num) {
+    return res.status(404).send('Serial Num Required')
   }
 
   next()
@@ -195,7 +195,7 @@ router.post('/signin', jsonParser, function (req, res, next) {
   let params = req.body
   let monitor = await monitorService.getMonitorById(params['monitor_id'])
 
-  if (!monitor || monitor.mac != params['mac']) {
+  if (!monitor || monitor.serial_num != params['serial_num']) {
     return res.status(404).send('Monitor not found')
   }
 

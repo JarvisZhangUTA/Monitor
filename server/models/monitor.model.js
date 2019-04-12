@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const MonitorSchema = mongoose.Schema({
   monitor_id: String,
-  mac: String,
+  serial_num: String,
   secret: String,
   config: {
     EN_485: { type: Number, default: 4 },

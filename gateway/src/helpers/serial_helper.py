@@ -1,4 +1,4 @@
-class CommandHelper:
+class SerialHelper(object):
 
     @staticmethod
     def getSerial():

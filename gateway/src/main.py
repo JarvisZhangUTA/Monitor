@@ -12,7 +12,7 @@ from workers.socket_worker import SocketWorker
 from helpers.serial_helper import SerialHelper
 
 serial_num = SerialHelper.getSerial()
-response = requests.post(url = '%s/api/monitors/signin' % Config.HTTP_HOST, json = {'monitor_id': Config.ID, 'serial_num': serial_num)})
+response = requests.post(url = '%s/api/monitors/signin' % Config.HTTP_HOST, json = {'monitor_id': Config.ID, 'serial_num': serial_num})
 
 if response.status_code is not 200:
     print response.text

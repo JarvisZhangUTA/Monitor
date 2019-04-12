@@ -9,9 +9,9 @@
           v-model="monitor.monitor_id"
           size="mini"/>
       </el-form-item>
-      <el-form-item label="MAC">
+      <el-form-item label="Serial Num">
         <el-input
-          v-model="monitor.mac"
+          v-model="monitor.serial_num"
           size="mini"/>
       </el-form-item>
       <el-form-item>
@@ -37,7 +37,7 @@ export default {
       visible: false,
       monitor: {
         monitor_id: '',
-        mac: ''
+        serial_num: ''
       }
     }
   },
@@ -50,15 +50,15 @@ export default {
         this.$message('ID Required')
         return
       }
-      if (!this.monitor.mac) {
-        this.$message('MAC Required')
+      if (!this.monitor.serial_num) {
+        this.$message('Serial Num Required')
         return
       }
 
       this.loading = true
       createMonitor(this.monitor).then(res => {
         this.loading = false
-        this.monitor = { monitor_id: '', mac: '' }
+        this.monitor = { monitor_id: '', serial_num: '' }
         this.visible = false
         this.$emit('on-create', res.data)
       }).catch(() => {

@@ -5,8 +5,8 @@ class MonitorService {
     return await MonitorModel.findOne({monitor_id: monitor_id}).exec()
   }
 
-  async getMonitorByMac(mac) {
-    return await MonitorModel.findOne({mac: mac}).exec()
+  async getMonitorBySerialNum(serial_num) {
+    return await MonitorModel.findOne({serial_num: serial_num}).exec()
   }
 
   async getMonitorByIdAndSecret(monitor_id, secret) {
