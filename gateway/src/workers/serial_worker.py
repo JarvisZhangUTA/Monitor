@@ -40,7 +40,7 @@ class SerialWorker:
                 self.executeTask(command)
             time.sleep(self.config.SERIAL_CYC)
 
-    def executeTask(self):
+    def executeTask(self, command):
         GPIO.output(self.config.EN_485,GPIO.HIGH)
         
         print 'write to 485 %s...' % command[0:10]
