@@ -17,7 +17,14 @@ class SerialWorker:
         self.config = config
         self.result_queue = RedisQueue(self.config.UP_QUEUE_NAME)
         self.command_queue = RedisQueue(self.config.DOWN_QUEUE_NAME)
-        self.port = serial.Serial("/dev/ttyS0", 9600, parity = serial.PARITY_NONE, stopbits = serial.STOPBITS_ONE, bytesize = serial.EIGHTBITS, timeout = Config.SERIAL_WAIT)
+        self.port = serial.Serial(
+            "/dev/ttyS0", 
+            self.config.BAUD_RATE,
+            parity = serial.PARITY_NONE,
+            stopbits = serial.STOPBITS_ONE,
+            bytesize = serial.EIGHTBITS,
+            timeout = self.config.SERIAL_WAIT
+        )
         self.run()
     
     def run(self):
