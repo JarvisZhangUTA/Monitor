@@ -1,0 +1,17 @@
+class Config:
+    ID = '9999'
+
+    DOWN_QUEUE_NAME = 'command_queue'
+    UP_QUEUE_NAME = 'result_queue'
+
+    SOCKET_HOST = 'ws://127.0.0.1:3001'
+    HTTP_HOST = 'http://127.0.0.1:3000'
+
+    EN_485 = 4
+    BAUD_RATE = 9600
+
+    SERIAL_CYC = 20
+    SERIAL_WAIT = 1
+
+    COMMANDS = []
+    # '01 04 00 00 00 46 71 F8', '01 04 80 00 00 23 98 13'
