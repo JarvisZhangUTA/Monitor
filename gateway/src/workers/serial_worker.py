@@ -12,12 +12,8 @@ from helpers.redis_queue import RedisQueue
 
 GPIO.setmode(GPIO.BCM)
 
-DEFAULT_COMMAND = '01 04 00 00 00 46 71 F8'
-DEFAULT_COMMAND2 = '01 04 80 00 00 23 98 13'
-
 class SerialWorker:
     def __init__(self, config):
-        self.trigger = False
         self.config = config
         self.result_queue = RedisQueue(self.config.UP_QUEUE_NAME)
         self.command_queue = RedisQueue(self.config.DOWN_QUEUE_NAME)
@@ -25,20 +21,20 @@ class SerialWorker:
         self.run()
     
     def run(self):
+        print 'Serial Worker Fake Run'
+        command_index = 0
         while True:
-            self.executeTask()
+            command = self.command_queue.get_nowait()
+            if not command and len(self.config.COMMANDS) > 0:
+                command_index = command_index % len(self.config.COMMANDS)
+                command = self.config.COMMANDS[command_index]
+                command_index = command_index + 1
+            if command:
+                self.executeTask(command)
             time.sleep(self.config.SERIAL_CYC)
 
     def executeTask(self):
         GPIO.output(self.config.EN_485,GPIO.HIGH)
-
-        command = self.command_queue.get_nowait()
-        if not command:
-            self.trigger = not self.trigger
-            if self.trigger:
-                command = DEFAULT_COMMAND
-            else:
-                command = DEFAULT_COMMAND2
         
         print 'write to 485 %s...' % command[0:10]
 

@@ -39,13 +39,23 @@
 
       <!-- INDEX -->
       <el-table-column
+        :index="1"
+        type="index"/>
+      <el-table-column
+        label="Status"
         align="center"
-        type="index">
+        type="index"
+        width="100">
         <template slot-scope="scope">
-          <svg-icon
-            :class="online_monitors.indexOf(scope.row.monitor_id) > -1 ? 'color-green' : ''"
-            icon-class="circle"
-            class="right-float"/>
+          <span
+            v-if="online_monitors.findIndex(item => item.monitor_id === scope.row.monitor_id) > -1"
+            class="color-green cursor-pointer"
+            @click="$refs.MonitorManageDialog.show(scope.row.monitor_id)">
+            <svg-icon icon-class="circle"/> Online
+          </span>
+          <span v-else>
+            <svg-icon icon-class="circle"/> Offline
+          </span>
         </template>
       </el-table-column>
       <!-- ID -->
@@ -60,7 +70,8 @@
       <!-- MAC -->
       <el-table-column
         prop="mac"
-        label="Mac"/>
+        label="Mac"
+        width="150"/>
       <!-- SECRET -->
       <el-table-column
         prop="secret"
@@ -152,6 +163,8 @@
     <monitor-command-edit-dialog
       ref="MonitorCommandEditDialog"
       @on-confirm="updateMonitor"/>
+    <monitor-manage-dialog
+      ref="MonitorManageDialog"/>
   </div>
 </template>
 
@@ -159,13 +172,15 @@
 
 import MonitorLinkDialog from '@/components/Monitor/MonitorLinkDialog'
 import MonitorCommandEditDialog from '@/components/Monitor/MonitorCommandEditDialog'
+import MonitorManageDialog from '@/components/Monitor/MonitorManageDialog'
 
 import { getMonitorList, updateMonitor, unlinkMonitor } from '@/api/monitor'
 
 export default {
   components: {
     MonitorLinkDialog,
-    MonitorCommandEditDialog
+    MonitorCommandEditDialog,
+    MonitorManageDialog
   },
   data() {
     return {

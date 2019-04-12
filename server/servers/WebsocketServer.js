@@ -107,8 +107,9 @@ class WebsocketServer {
           this.sendMessage(ws, {type: 'error', data: 'Selected monitor is offline'})
           return
         }
-
+        
         this.sendMessage(monitorConnection, message)
+        this.sendMessage(ws, {type: 'command_response', data: 'Message sent', monitor_id: message.send_to})
         break;
       case 'monitors':
         let subscribes = ws.user.monitors
@@ -121,7 +122,7 @@ class WebsocketServer {
         })
 
         this.sendMessage(ws, {type: 'monitors', data: onlines})
-        break; 
+        break;
     }
   }
   
@@ -133,7 +134,18 @@ class WebsocketServer {
       case 'response':
         let response = ResponseParser.parse(message.response)
         response.monitor_id = ws.monitor.monitor_id
+        response.date = new Date()
         this.responseService.saveResponse(response)
+
+        this.userConnections.forEach(userConnection => {
+          const user = userConnection.user
+          if (!user) { return }
+          const monitors = user.monitors ? user.monitors : []
+          const index = user.monitors.indexOf(ws.monitor.monitor_id)
+          if (index === -1) { return }
+          this.sendMessage(userConnection, { type: 'response', data: response })
+        })
+
         break;
     }
   }

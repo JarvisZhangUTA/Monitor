@@ -70,7 +70,7 @@ export const constantRouterMap = [
         path: 'list',
         name: 'MonitorList',
         component: () => import('@/views/monitor/list'),
-        meta: { title: 'List', icon: 'nested' }
+        meta: { title: 'Monitor List', icon: 'nested' }
       },
       {
         path: 'history',

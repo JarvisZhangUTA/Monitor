@@ -11,6 +11,8 @@ module.exports = class CommandParser {
    * Length: 290
    * EXAMPLE: 01 04 8c 40 34 ff ff ff ff 00 42 01 00 16 05 00 01 01 38 21 73 20 62 53 43 41 36 30 4b 54 4c 2d 44 4f 2f 55 53 2d 34 38 30 00 00 00 5c 10 00 00 00 08 4b 00 ea 02 82 01 fe 00 36 14 d9 00 09 00 09 13 5d 13 47 13 51 00 14 00 14 00 15 1a 2f 00 07 03 72 00 00 03 91 00 00 02 58 02 08 01 93 00 00 10 00 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 03 ff ff ff ff ff ff ff ff ff ff 08 07 00 00 0c e4 00 28 00 0e 16 4d
    * 
+   * Length: 34
+   * 
    * UNKNOW
    */
 
@@ -33,14 +35,14 @@ module.exports = class CommandParser {
   static parseUnknowCommand( command ) {
     return {
       type: 'UNKNOW',
-      original_command: command
+      original: command
     }
   }
 
   static parseResponse34Command( command ) {
     let parsed_command = {
       type: 'RESPONSE',
-      original_command: command
+      original: command
     }
 
     parsed_command.device_address = command.substr(0, 2)
@@ -65,7 +67,7 @@ module.exports = class CommandParser {
   static parseResponse290Command( command ) {
     let parsed_command = {
       type: 'RESPONSE',
-      original_command: command
+      original: command
     };
     
     parsed_command.device_address = command.substr(0, 2);
@@ -142,7 +144,7 @@ module.exports = class CommandParser {
   static parseRequestCommand( command ) {
     return {
       type: 'REQUEST',
-      original_command: command
+      original: command
     };
   }
 }

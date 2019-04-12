@@ -18,9 +18,6 @@ export default class {
   }
 
   onMessage(message) {
-    console.log('-- on message --')
-    console.log(message)
-
     if (!message.data) { return }
     try {
       message = JSON.parse(message.data)
@@ -32,7 +29,12 @@ export default class {
           this.sendMessage({ type: 'verify', token: this.token })
           break
         default:
-          this.subscribers.forEach(subscriber => { subscriber.onMessage(message) })
+          this.subscribers.forEach(subscriber => {
+            if (!subscriber || !subscriber.onMessage) {
+              return
+            }
+            subscriber.onMessage(message)
+          })
           break
       }
     } catch (e) {
