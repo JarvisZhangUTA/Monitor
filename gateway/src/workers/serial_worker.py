@@ -49,9 +49,11 @@ class SerialWorker:
 
         command = CommandHelper.toWriteable( command )
         self.port.write(command)
-
+        
+        max_write_wait = 5
         while self.port.out_waiting > 0:
             time.sleep(0.01)
+            max_write_wait = max_write_wait - 0.01
 
         GPIO.output(4,GPIO.LOW)
         result = self.port.readall()
