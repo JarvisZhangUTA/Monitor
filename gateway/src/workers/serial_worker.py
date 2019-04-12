@@ -10,6 +10,8 @@ from binascii import unhexlify
 from helpers.command_helper import CommandHelper
 from helpers.redis_queue import RedisQueue
 
+GPIO.setup(4, GPIO.OUT)
+GPIO.output(4, GPIO.HIGH)
 GPIO.setmode(GPIO.BCM)
 
 class SerialWorker:
