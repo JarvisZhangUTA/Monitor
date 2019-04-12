@@ -9,8 +9,10 @@ import json
 from config.config import Config
 from test.serial_worker import SerialWorker
 from workers.socket_worker import SocketWorker
+from helpers.serial_helper import SerialHelper
 
-response = requests.post(url = '%s/api/monitors/signin' % Config.HTTP_HOST, json = {'monitor_id': Config.ID, 'mac': uuid.getnode()})
+serial_num = SerialHelper.getSerial()
+response = requests.post(url = '%s/api/monitors/signin' % Config.HTTP_HOST, json = {'monitor_id': Config.ID, 'serial_num': serial_num)})
 
 if response.status_code is not 200:
     print response.text
