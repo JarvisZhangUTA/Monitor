@@ -2,7 +2,8 @@
   <div class="signup-container">
     <el-form ref="signupForm" :model="signupForm" :rules="signupRules" class="signup-form" auto-complete="on" label-position="left">
       <h3 class="title">
-        Monitor
+        <img src="@/assets/logo.png" alt="LOGO" style="width: 200px">
+        <div style="color: #bd5651; font-size: 19px;"> <i> MONITOR </i> </div>
       </h3>
       <el-form-item prop="email">
         <span class="svg-container">
