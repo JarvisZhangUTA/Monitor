@@ -27,6 +27,7 @@ router.get('/all', adminLimit, async function (req, res) {
 router.get('/', userLimit, async function (req, res) {
   const decoded = authService.verifyToken(req.headers['x-token'])
   const user = await userService.getUserById(decoded._id)
+  console.log(user)
   const monitorIds = user.monitors
   if (!monitorIds || monitorIds.length === 0) {
     return res.json([])
