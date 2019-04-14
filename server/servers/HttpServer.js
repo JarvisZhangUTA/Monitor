@@ -11,7 +11,7 @@ const UserRouter = require('../routes/user.router')
 
 class HttpServer {
   constructor () {
-    app.use(express.static(path.join(__dirname,'../../client/dist')))
+    app.use(express.static(path.join(__dirname,'../../web-client/dist')))
 
     app.use('/api/commands', CommandRouter)
     app.use('/api/monitors', MonitorRouter)
@@ -19,7 +19,7 @@ class HttpServer {
     app.use('/api/users', UserRouter)
 
     app.use(function (req, res, next) {
-      res.sendFile('index.html', {root: path.join(__dirname, '../../client/dist')});
+      res.sendFile('index.html', {root: path.join(__dirname, '../../web-client/dist')});
     })
 
     http.createServer(app).listen(config.http_port, () => {

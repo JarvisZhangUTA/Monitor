@@ -38,22 +38,23 @@ class SerialWorker:
                 command_index = command_index % len(self.config.COMMANDS)
                 command = self.config.COMMANDS[command_index]
                 command_index = command_index + 1
-            if command:
-                self.executeTask(command)
+
+            self.executeTask(command)
             time.sleep(self.config.SERIAL_CYC)
 
     def executeTask(self, command):
-        GPIO.output(4,GPIO.HIGH)
-        
-        print 'write to 485 %s...' % command[0:10]
+        if command:
+            GPIO.output(4,GPIO.HIGH)
+            
+            print 'write to 485 %s...' % command[0:10]
 
-        command = CommandHelper.toWriteable( command )
-        self.port.write(command)
-        
-        max_write_wait = 5
-        while self.port.out_waiting > 0:
-            time.sleep(0.01)
-            max_write_wait = max_write_wait - 0.01
+            command = CommandHelper.toWriteable( command )
+            self.port.write(command)
+            
+            max_write_wait = 5
+            while self.port.out_waiting > 0:
+                time.sleep(0.01)
+                max_write_wait = max_write_wait - 0.01
 
         GPIO.output(4,GPIO.LOW)
         result = self.port.readall()
