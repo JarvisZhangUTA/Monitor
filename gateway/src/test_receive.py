@@ -1,3 +1,3 @@
-from test.receiver_worker import ReceiverWorker
+from test.receive_worker import ReceiveWorker
 
-ReceiverWorker()
+ReceiveWorker()
