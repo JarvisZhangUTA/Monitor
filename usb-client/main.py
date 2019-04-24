@@ -25,6 +25,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item = QListWidgetItem(key)
             item.setData(1, value)
             self.CommandListView.addItem(item)
+        # Invertors
+        for addr in range(1, 33):
+            self.InvertorComboBox.addItem('%02d' % addr)
 
     def initEvent(self):
         print 'init event'
@@ -36,7 +39,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print 'test connection'
         badu_rate = self.BaduRateLineEdit.text()
         com_port = self.ComPortComboBox.currentText()
-        test_command = '01040000004671F8'
 
         if not badu_rate or not com_port:
             self.Statusbar.showMessage('Badu Rate and Com port needed')
@@ -53,7 +55,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if write_result:
                 self.Statusbar.showMessage('Find Invertor %02d' % addr)
                 self.serial_helper = serial_helper
-                self.InvertorComboBox.addItem('%02d' % addr)
                 connected = True
         
         if connected:
